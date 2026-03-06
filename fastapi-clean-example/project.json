@@ -4,13 +4,19 @@
   "projectType": "application",
   "root": "fastapi-clean-example",
   "sourceRoot": "fastapi-clean-example/src",
-  "tags": ["scope:backend", "type:app"],
+  "tags": [
+    "scope:backend",
+    "type:app"
+  ],
   "metadata": {
     "description": "Existing FastAPI clean architecture template wrapped by Nx.",
     "owner": "backend"
   },
   "targets": {
     "serve": {
+      "metadata": {
+        "description": "以本地环境配置启动 FastAPI 应用。"
+      },
       "executor": "nx:run-commands",
       "options": {
         "cwd": "fastapi-clean-example",
@@ -18,6 +24,9 @@
       }
     },
     "lint": {
+      "metadata": {
+        "description": "运行后端代码检查流水线。"
+      },
       "executor": "nx:run-commands",
       "options": {
         "cwd": "fastapi-clean-example",
@@ -25,6 +34,9 @@
       }
     },
     "test-unit": {
+      "metadata": {
+        "description": "运行后端单元测试。"
+      },
       "executor": "nx:run-commands",
       "options": {
         "cwd": "fastapi-clean-example",
@@ -32,10 +44,123 @@
       }
     },
     "test-integration": {
+      "metadata": {
+        "description": "保留后端集成测试 target 名称，当前仍为显式占位。"
+      },
       "executor": "nx:run-commands",
       "options": {
         "cwd": "fastapi-clean-example",
         "command": "printf '%s\n' 'app-api:test-integration 尚未在第一阶段接入；后续将接到真实 DB 与 BDD 链路。'"
+      }
+    },
+    "format": {
+      "metadata": {
+        "description": "运行后端代码格式化。"
+      },
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "fastapi-clean-example",
+        "command": "uv run make code.format"
+      }
+    },
+    "check": {
+      "metadata": {
+        "description": "运行后端聚合检查流水线，包括 lint 与测试。"
+      },
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "fastapi-clean-example",
+        "command": "uv run make code.check"
+      }
+    },
+    "coverage": {
+      "metadata": {
+        "description": "运行后端测试覆盖率统计并输出终端报告。"
+      },
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "fastapi-clean-example",
+        "command": "uv run make code.cov"
+      }
+    },
+    "coverage-html": {
+      "metadata": {
+        "description": "生成后端测试覆盖率 HTML 报告。"
+      },
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "fastapi-clean-example",
+        "command": "uv run make code.cov.html"
+      }
+    },
+    "env": {
+      "metadata": {
+        "description": "输出当前后端 `APP_ENV` 值；如需特定环境请在执行前设置环境变量。"
+      },
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "fastapi-clean-example",
+        "command": "uv run make env"
+      }
+    },
+    "dotenv": {
+      "metadata": {
+        "description": "根据当前 `APP_ENV` 生成对应的后端 `.env` 文件。"
+      },
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "fastapi-clean-example",
+        "command": "uv run make dotenv"
+      }
+    },
+    "db-up": {
+      "metadata": {
+        "description": "按当前 `APP_ENV` 在后台启动后端数据库容器。"
+      },
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "fastapi-clean-example",
+        "command": "uv run make up.db"
+      }
+    },
+    "db-down": {
+      "metadata": {
+        "description": "按当前 `APP_ENV` 停止后端数据库容器。"
+      },
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "fastapi-clean-example",
+        "command": "uv run make down.db"
+      }
+    },
+    "infra-up": {
+      "metadata": {
+        "description": "按当前 `APP_ENV` 在后台启动后端完整 Docker Compose 基础设施。"
+      },
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "fastapi-clean-example",
+        "command": "uv run make up"
+      }
+    },
+    "infra-down": {
+      "metadata": {
+        "description": "按当前 `APP_ENV` 停止后端完整 Docker Compose 基础设施。"
+      },
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "fastapi-clean-example",
+        "command": "uv run make down"
+      }
+    },
+    "migrate": {
+      "metadata": {
+        "description": "按当前 `APP_ENV` 执行后端数据库迁移到最新版本。"
+      },
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "fastapi-clean-example",
+        "command": "uv run alembic upgrade head"
       }
     }
   }

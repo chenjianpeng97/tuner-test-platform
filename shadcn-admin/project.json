@@ -4,13 +4,19 @@
   "projectType": "application",
   "root": "shadcn-admin",
   "sourceRoot": "shadcn-admin/src",
-  "tags": ["scope:frontend", "type:app"],
+  "tags": [
+    "scope:frontend",
+    "type:app"
+  ],
   "metadata": {
     "description": "Existing React + Vite frontend template wrapped by Nx.",
     "owner": "frontend"
   },
   "targets": {
     "serve": {
+      "metadata": {
+        "description": "启动前端 Vite 开发服务器。"
+      },
       "executor": "nx:run-commands",
       "options": {
         "cwd": "shadcn-admin",
@@ -18,18 +24,66 @@
       }
     },
     "build": {
+      "metadata": {
+        "description": "构建前端生产产物。"
+      },
       "executor": "nx:run-commands",
-      "outputs": ["{projectRoot}/dist"],
+      "outputs": [
+        "{projectRoot}/dist"
+      ],
       "options": {
         "cwd": "shadcn-admin",
         "command": "pnpm build"
       }
     },
     "lint": {
+      "metadata": {
+        "description": "运行前端 ESLint 检查。"
+      },
       "executor": "nx:run-commands",
       "options": {
         "cwd": "shadcn-admin",
         "command": "pnpm lint"
+      }
+    },
+    "preview": {
+      "metadata": {
+        "description": "以 Vite 预览模式启动已构建的前端产物。"
+      },
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "shadcn-admin",
+        "command": "pnpm preview"
+      }
+    },
+    "format-check": {
+      "metadata": {
+        "description": "检查前端代码格式是否符合 Prettier 规范。"
+      },
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "shadcn-admin",
+        "command": "pnpm format:check"
+      }
+    },
+    "format": {
+      "metadata": {
+        "description": "使用 Prettier 格式化前端代码。"
+      },
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "shadcn-admin",
+        "command": "pnpm format"
+      }
+    },
+    "knip": {
+      "metadata": {
+        "description": "分析前端未使用的文件、导出与依赖。"
+      },
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "shadcn-admin",
+        "command": "pnpm knip"
       }
     }
   }
