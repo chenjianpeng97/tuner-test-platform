@@ -1,0 +1,36 @@
+{
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "name": "app-web",
+  "projectType": "application",
+  "root": "shadcn-admin",
+  "sourceRoot": "shadcn-admin/src",
+  "tags": ["scope:frontend", "type:app"],
+  "metadata": {
+    "description": "Existing React + Vite frontend template wrapped by Nx.",
+    "owner": "frontend"
+  },
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "shadcn-admin",
+        "command": "pnpm dev"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "outputs": ["{projectRoot}/dist"],
+      "options": {
+        "cwd": "shadcn-admin",
+        "command": "pnpm build"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "shadcn-admin",
+        "command": "pnpm lint"
+      }
+    }
+  }
+}

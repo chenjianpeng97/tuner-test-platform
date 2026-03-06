@@ -1,0 +1,13 @@
+{
+    "name": "tuner-test-platform",
+    "private": true,
+    "packageManager": "pnpm@10.18.3",
+    "scripts": {
+        "nx": "nx",
+        "graph": "nx graph",
+        "show:projects": "nx show projects"
+    },
+    "devDependencies": {
+        "nx": "^21.0.0"
+    }
+}

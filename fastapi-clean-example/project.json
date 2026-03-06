@@ -1,0 +1,42 @@
+{
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "name": "app-api",
+  "projectType": "application",
+  "root": "fastapi-clean-example",
+  "sourceRoot": "fastapi-clean-example/src",
+  "tags": ["scope:backend", "type:app"],
+  "metadata": {
+    "description": "Existing FastAPI clean architecture template wrapped by Nx.",
+    "owner": "backend"
+  },
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "fastapi-clean-example",
+        "command": "APP_ENV=local uv run python src/app/run.py"
+      }
+    },
+    "lint": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "fastapi-clean-example",
+        "command": "uv run make code.lint"
+      }
+    },
+    "test-unit": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "fastapi-clean-example",
+        "command": "uv run pytest -v"
+      }
+    },
+    "test-integration": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "fastapi-clean-example",
+        "command": "printf '%s\n' 'app-api:test-integration 尚未在第一阶段接入；后续将接到真实 DB 与 BDD 链路。'"
+      }
+    }
+  }
+}
