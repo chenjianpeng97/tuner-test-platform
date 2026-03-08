@@ -3,3 +3,7 @@ node_modules/
 dist/
 .venv/
 *.log
+
+# Local WSL proxy installer and docs (keep out of repo commits)
+scripts/wsl-proxy-setup.sh
+docs/WSL_PROXY.md
