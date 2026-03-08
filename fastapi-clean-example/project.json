@@ -13,6 +13,36 @@
     "owner": "backend"
   },
   "targets": {
+    "init": {
+      "metadata": {
+        "description": "Initialize backend dependencies and generate the local env file."
+      },
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "uv sync",
+          "uv run make dotenv APP_ENV=local"
+        ],
+        "cwd": "fastapi-clean-example",
+        "parallel": false
+      }
+    },
+    "bootstrap-local": {
+      "metadata": {
+        "description": "Start the local database and apply migrations for backend development."
+      },
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "uv run make dotenv APP_ENV=local",
+          "uv run make up.db APP_ENV=local",
+          "sleep 3",
+          "APP_ENV=local uv run alembic upgrade head"
+        ],
+        "cwd": "fastapi-clean-example",
+        "parallel": false
+      }
+    },
     "serve": {
       "metadata": {
         "description": "以本地环境配置启动 FastAPI 应用。"

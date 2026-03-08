@@ -653,6 +653,12 @@ Install pre-commit hooks:
 pre-commit install
 ```
 
+If you are working from the Nx workspace root, the equivalent command is:
+
+```shell
+pnpm exec nx run app-api:init
+```
+
 6. Launch
 
 - To run only the database in Docker and use the app locally, use the following command:
@@ -665,6 +671,12 @@ pre-commit install
 - Then, apply the migrations:
     ```shell
     alembic upgrade head
+    ```
+
+  Or, from the Nx workspace root, do both steps with:
+
+    ```shell
+    pnpm exec nx run app-api:bootstrap-local
     ```
 
 - After applying the migrations, the database is ready, and you can launch the application locally (e.g., through your

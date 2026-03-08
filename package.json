@@ -5,7 +5,8 @@
     "scripts": {
         "nx": "nx",
         "graph": "nx graph",
-        "show:projects": "nx show projects"
+        "show:projects": "nx show projects",
+        "init": "pnpm install && nx run-many --target=init --all"
     },
     "devDependencies": {
         "nx": "^21.0.0"

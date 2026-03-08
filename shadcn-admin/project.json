@@ -13,6 +13,16 @@
     "owner": "frontend"
   },
   "targets": {
+    "init": {
+      "metadata": {
+        "description": "Initialize frontend dependencies."
+      },
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "pnpm install",
+        "cwd": "shadcn-admin"
+      }
+    },
     "serve": {
       "metadata": {
         "description": "启动前端 Vite 开发服务器。"

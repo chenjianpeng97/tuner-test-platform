@@ -35,7 +35,7 @@ target_metadata = mapper_registry.metadata
 # ... etc.
 settings: AppSettings = load_settings()
 
-config.set_main_option("sqlalchemy.url", settings.postgres.dsn)
+config.set_main_option("sqlalchemy.url", settings.postgres.dsn.replace("%", "%%"))
 
 
 def run_migrations_offline() -> None:

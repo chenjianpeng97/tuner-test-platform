@@ -45,42 +45,51 @@ dotenv: guard-APP_ENV
 	@$(PYTHON) $(TOML_CONFIG_MANAGER) $(APP_ENV)
 
 # Docker compose
+DOCKER := docker
 DOCKER_COMPOSE := docker compose
 DOCKER_COMPOSE_PRUNE := scripts/makefile/docker_prune.sh
 
-.PHONY: up.db up.db-echo up up.echo down down.total logs.db shell.db prune
-up.db: guard-APP_ENV
-	@echo "APP_ENV=$(APP_ENV)"
-	@cd $(CONFIGS_DIG)/$(APP_ENV) && $(DOCKER_COMPOSE) --env-file .env.$(APP_ENV) up -d web_app_db_pg
+.PHONY: guard-docker
+guard-docker:
+	@command -v $(DOCKER) >/dev/null 2>&1 || { \
+		echo "docker is required for this command but was not found in PATH."; \
+		echo "Install Docker/Compose first, or run only the dependency setup target: pnpm exec nx run app-api:init"; \
+		exit 1; \
+	}
 
-up.db-echo: guard-APP_ENV
+.PHONY: up.db up.db-echo up up.echo down down.total logs.db shell.db prune
+up.db: guard-APP_ENV guard-docker
+	@echo "APP_ENV=$(APP_ENV)"
+	@cd $(CONFIGS_DIG)/$(APP_ENV) && $(DOCKER_COMPOSE) --env-file .env.$(APP_ENV) up -d --wait web_app_db_pg
+
+up.db-echo: guard-APP_ENV guard-docker
 	@echo "APP_ENV=$(APP_ENV)"
 	@cd $(CONFIGS_DIG)/$(APP_ENV) && $(DOCKER_COMPOSE) --env-file .env.$(APP_ENV) up web_app_db_pg
 
-up: guard-APP_ENV
+up: guard-APP_ENV guard-docker
 	@echo "APP_ENV=$(APP_ENV)"
 	@cd $(CONFIGS_DIG)/$(APP_ENV) && $(DOCKER_COMPOSE) --env-file .env.$(APP_ENV) up -d --build
 
-up.echo: guard-APP_ENV
+up.echo: guard-APP_ENV guard-docker
 	@echo "APP_ENV=$(APP_ENV)"
 	@cd $(CONFIGS_DIG)/$(APP_ENV) && $(DOCKER_COMPOSE) --env-file .env.$(APP_ENV) up --build
 
-down.db: guard-APP_ENV
+down.db: guard-APP_ENV guard-docker
 	@cd $(CONFIGS_DIG)/$(APP_ENV) && $(DOCKER_COMPOSE) --env-file .env.$(APP_ENV) down web_app_db_pg
 
-down: guard-APP_ENV
+down: guard-APP_ENV guard-docker
 	@cd $(CONFIGS_DIG)/$(APP_ENV) && $(DOCKER_COMPOSE) --env-file .env.$(APP_ENV) down
 
-down.total: guard-APP_ENV
+down.total: guard-APP_ENV guard-docker
 	@cd $(CONFIGS_DIG)/$(APP_ENV) && $(DOCKER_COMPOSE) --env-file .env.$(APP_ENV) down -v
 
-logs.db: guard-APP_ENV
+logs.db: guard-APP_ENV guard-docker
 	@cd $(CONFIGS_DIG)/$(APP_ENV) && $(DOCKER_COMPOSE) --env-file .env.$(APP_ENV) logs -f web_app_db_pg
 
-shell.db: guard-APP_ENV
+shell.db: guard-APP_ENV guard-docker
 	@cd $(CONFIGS_DIG)/$(APP_ENV) && $(DOCKER_COMPOSE) --env-file .env.$(APP_ENV) exec web_app_db_pg sh
 
-prune:
+prune: guard-docker
 	$(DOCKER_COMPOSE_PRUNE)
 
 # Project structure visualization
