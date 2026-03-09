@@ -1,0 +1,7 @@
+[export]
+fields = [
+    "postgres.USER",
+    "postgres.PASSWORD",
+    "postgres.DB",
+    "postgres.PORT",
+]

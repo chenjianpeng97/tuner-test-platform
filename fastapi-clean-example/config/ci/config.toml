@@ -1,0 +1,31 @@
+[postgres]
+USER = "app_user"
+PASSWORD = "app_password"
+DB = "app_db"
+HOST = "127.0.0.1"
+PORT = 55432
+DRIVER = "psycopg"
+
+[sqla]
+ECHO = false
+ECHO_POOL = false
+POOL_SIZE = 10
+MAX_OVERFLOW = 20
+
+[security.auth]
+JWT_SECRET = "ci-jwt-secret-0123456789abcdef0123456789abcdef"
+JWT_ALGORITHM = "HS256"
+SESSION_TTL_MIN = 60
+SESSION_REFRESH_THRESHOLD = 0.5
+
+[security.cookies]
+SECURE = false
+
+[security.password]
+PEPPER = "ci-password-pepper-0123456789abcdef0123456789"
+HASHER_WORK_FACTOR = 12
+HASHER_MAX_THREADS = 4
+HASHER_SEMAPHORE_WAIT_TIMEOUT_S = 5
+
+[logs]
+LEVEL = "INFO"

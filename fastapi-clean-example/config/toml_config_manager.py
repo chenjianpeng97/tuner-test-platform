@@ -74,6 +74,7 @@ class ValidEnvs(StrEnum):
 
     LOCAL = "local"
     DEV = "dev"
+    CI = "ci"
     PROD = "prod"
 
 
@@ -94,6 +95,7 @@ CONFIG_PATH: Final[Path] = BASE_DIR_PATH / "config"
 ENV_TO_DIR_PATHS: Final[Mapping[ValidEnvs, Path]] = MappingProxyType({
     ValidEnvs.LOCAL: CONFIG_PATH / ValidEnvs.LOCAL,
     ValidEnvs.DEV: CONFIG_PATH / ValidEnvs.DEV,
+    ValidEnvs.CI: CONFIG_PATH / ValidEnvs.CI,
     ValidEnvs.PROD: CONFIG_PATH / ValidEnvs.PROD,
 })
 

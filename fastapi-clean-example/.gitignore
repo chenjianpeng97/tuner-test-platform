@@ -164,6 +164,11 @@ config/local/*
 !config/local/.gitkeep
 config/dev/*
 !config/dev/.gitkeep
+config/ci/*
+!config/ci/.gitkeep
+!config/ci/config.toml
+!config/ci/export.toml
+!config/ci/compose.yaml
 config/prod/*
 !config/prod/.gitkeep
 .secrets.*
