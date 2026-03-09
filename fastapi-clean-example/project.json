@@ -218,6 +218,30 @@
         "cwd": "fastapi-clean-example",
         "command": "uv run alembic upgrade head"
       }
+    },
+    "test-uat-dry-run": {
+      "metadata": {
+        "description": "Validate Behave feature discovery and step binding without sending live HTTP requests."
+      },
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": ".",
+        "command": "uv run --directory fastapi-clean-example behave --dry-run --stage http"
+      }
+    },
+    "test-uat": {
+      "metadata": {
+        "description": "Run the full HTTP UAT suite with Behave and emit JUnit XML results under dist/test-results/app-api/uat/."
+      },
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": ".",
+        "commands": [
+          "mkdir -p dist/test-results/app-api/uat",
+          "uv run --directory fastapi-clean-example behave --stage http --junit --junit-directory dist/test-results/app-api/uat"
+        ],
+        "parallel": false
+      }
     }
   }
 }
