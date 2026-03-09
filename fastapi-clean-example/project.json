@@ -43,6 +43,22 @@
         "parallel": false
       }
     },
+    "bootstrap-ci": {
+      "metadata": {
+        "description": "Start the CI database and apply migrations for backend UAT execution."
+      },
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "uv run make dotenv APP_ENV=ci",
+          "uv run make up.db APP_ENV=ci",
+          "sleep 3",
+          "APP_ENV=ci uv run alembic upgrade head"
+        ],
+        "cwd": "fastapi-clean-example",
+        "parallel": false
+      }
+    },
     "serve": {
       "metadata": {
         "description": "以本地环境配置启动 FastAPI 应用。"
@@ -51,6 +67,16 @@
       "options": {
         "cwd": "fastapi-clean-example",
         "command": "APP_ENV=local uv run python src/app/run.py"
+      }
+    },
+    "serve-ci": {
+      "metadata": {
+        "description": "以 CI 环境配置启动 FastAPI 应用。"
+      },
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "fastapi-clean-example",
+        "command": "APP_ENV=ci uv run python src/app/run.py"
       }
     },
     "lint": {
