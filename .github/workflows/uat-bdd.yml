@@ -1,0 +1,165 @@
+name: UAT BDD
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  app-api-uat:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.18.3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v6
+
+      - name: Install workspace dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install backend dependencies
+        working-directory: fastapi-clean-example
+        run: uv sync --locked --group dev
+
+      - name: Run workspace UAT feature checks
+        run: pnpm nx run ux-uat:check-features
+
+      - name: Prepare CI local backend config
+        run: |
+          mkdir -p fastapi-clean-example/config/local
+          cat <<'EOF' > fastapi-clean-example/config/local/config.toml
+          [postgres]
+          USER = "app_user"
+          PASSWORD = "app_password"
+          DB = "app_db"
+          HOST = "127.0.0.1"
+          PORT = 5432
+          DRIVER = "psycopg"
+
+          [sqla]
+          ECHO = false
+          ECHO_POOL = false
+          POOL_SIZE = 10
+          MAX_OVERFLOW = 20
+
+          [security.auth]
+          JWT_SECRET = "ci-jwt-secret-0123456789abcdef0123456789abcdef"
+          JWT_ALGORITHM = "HS256"
+          SESSION_TTL_MIN = 60
+          SESSION_REFRESH_THRESHOLD = 0.5
+
+          [security.cookies]
+          SECURE = false
+
+          [security.password]
+          PEPPER = "ci-password-pepper-0123456789abcdef0123456789"
+          HASHER_WORK_FACTOR = 12
+          HASHER_MAX_THREADS = 4
+          HASHER_SEMAPHORE_WAIT_TIMEOUT_S = 5
+
+          [logs]
+          LEVEL = "INFO"
+          EOF
+          cat <<'EOF' > fastapi-clean-example/config/local/export.toml
+          [export]
+          fields = [
+            "postgres.USER",
+            "postgres.PASSWORD",
+            "postgres.DB",
+            "postgres.PORT",
+          ]
+          EOF
+          cat <<'EOF' > fastapi-clean-example/config/local/compose.yaml
+          services:
+            web_app_db_pg:
+              image: postgres:16-alpine
+              restart: unless-stopped
+              environment:
+                POSTGRES_USER: ${POSTGRES_USER}
+                POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+                POSTGRES_DB: ${POSTGRES_DB}
+              ports:
+                - "${POSTGRES_PORT:-5432}:5432"
+              healthcheck:
+                test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+                interval: 2s
+                timeout: 5s
+                retries: 20
+                start_period: 5s
+              volumes:
+                - postgres_local_data:/var/lib/postgresql/data
+
+          volumes:
+            postgres_local_data:
+          EOF
+
+      - name: Start database and run migrations
+        env:
+          APP_ENV: local
+        run: pnpm nx run app-api:bootstrap-local
+
+      - name: Start FastAPI service
+        env:
+          APP_ENV: local
+        run: |
+          pnpm nx run app-api:serve > /tmp/app-api-uat.log 2>&1 &
+          echo $! > /tmp/app-api-uat.pid
+
+      - name: Wait for health endpoint
+        run: |
+          timeout 30s bash -s <<'BASH'
+          until curl -sf http://127.0.0.1:8000/api/v1/health > /tmp/app-api-health.json; do
+            sleep 1
+          done
+          cat /tmp/app-api-health.json
+          BASH
+
+      - name: Validate Behave dry-run wiring
+        run: pnpm nx run app-api:test-uat-dry-run
+
+      - name: Run HTTP UAT suite
+        run: pnpm nx run app-api:test-uat
+
+      - name: Upload UAT JUnit results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-api-uat-junit
+          path: dist/test-results/app-api/uat/
+          if-no-files-found: error
+
+      - name: Print backend log on failure
+        if: failure()
+        run: |
+          if [[ -f /tmp/app-api-uat.log ]]; then
+            cat /tmp/app-api-uat.log
+          fi
+
+      - name: Stop FastAPI service
+        if: always()
+        run: |
+          if [[ -f /tmp/app-api-uat.pid ]]; then
+            kill $(cat /tmp/app-api-uat.pid) || true
+          fi
