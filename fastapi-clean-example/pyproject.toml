@@ -43,12 +43,16 @@ dev = [
     "ruff==0.12.5",
     "slotscheck==0.19.1",
     { include-group = "test" },
+    { include-group = "uat" },
 ]
 test = [
     "coverage==7.10.0",
     "line-profiler==5.0.0",
     "pytest==8.4.1",
     "pytest-asyncio==1.1.0"
+]
+uat = [
+    "behave>=1.2.6",
 ]
 
 [tool.coverage.report]
