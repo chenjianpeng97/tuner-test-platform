@@ -1,0 +1,38 @@
+{
+  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "name": "ux-uat",
+  "projectType": "application",
+  "root": "ux-uat",
+  "sourceRoot": "ux-uat",
+  "tags": [
+    "scope:ux",
+    "type:tool"
+  ],
+  "metadata": {
+    "description": "Cross-project UAT/BDD feature governance checks.",
+    "owner": "qa"
+  },
+  "targets": {
+    "check-features": {
+      "metadata": {
+        "description": "Run repository-level UAT/BDD feature structure checks."
+      },
+      "executor": "nx:run-commands",
+      "inputs": [
+        "{workspaceRoot}/features/**/*",
+        "{workspaceRoot}/scripts/uat/**/*",
+        "{workspaceRoot}/package.json",
+        "{workspaceRoot}/nx.json"
+      ],
+      "options": {
+        "cwd": ".",
+        "commands": [
+          "python3 scripts/uat/check_feature_pairs.py",
+          "python3 scripts/uat/check_subfeature_naming.py",
+          "python3 scripts/uat/check_feature_db_mapping.py"
+        ],
+        "parallel": false
+      }
+    }
+  }
+}
