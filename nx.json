@@ -46,6 +46,13 @@
         "default",
         "^default"
       ]
+      },
+      "test-uat": {
+        "cache": false,
+        "inputs": [
+          "default",
+          "^default"
+        ]
     }
   }
 }
