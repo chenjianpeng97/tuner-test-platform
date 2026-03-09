@@ -226,7 +226,7 @@
       "executor": "nx:run-commands",
       "options": {
         "cwd": ".",
-        "command": "uv run --directory fastapi-clean-example behave --dry-run --stage http"
+        "command": "uv run --project fastapi-clean-example behave --dry-run --stage http"
       }
     },
     "test-uat": {
@@ -238,7 +238,7 @@
         "cwd": ".",
         "commands": [
           "mkdir -p dist/test-results/app-api/uat",
-          "uv run --directory fastapi-clean-example behave --stage http --junit --junit-directory dist/test-results/app-api/uat"
+          "uv run --project fastapi-clean-example behave --stage http --junit --junit-directory dist/test-results/app-api/uat"
         ],
         "parallel": false
       }
