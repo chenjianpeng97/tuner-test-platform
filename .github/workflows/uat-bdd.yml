@@ -96,5 +96,10 @@ jobs:
         if: always()
         run: |
           if [[ -f /tmp/app-api-uat.pid ]]; then
-            kill $(cat /tmp/app-api-uat.pid) || true
+            kill $(cat /tmp/app-api-uat.pid) 2>/dev/null || true
           fi
+          # Kill child processes (uv run / uvicorn) that the parent kill misses,
+          # so they don't hold the uv cache lock during post-job cleanup.
+          pkill -f "python src/app/run.py" 2>/dev/null || true
+          pkill -f "uvicorn" 2>/dev/null || true
+          sleep 1
