@@ -83,42 +83,6 @@
         "command": "printf '%s\n' 'app-api:test-integration 尚未在第一阶段接入；后续将接到真实 DB 与 BDD 链路。'"
       }
     },
-      "test-uat-dry-run": {
-        "metadata": {
-          "description": "以 Behave dry-run 方式检查 HTTP UAT 的目录与 steps 装配是否完整。"
-        },
-        "executor": "nx:run-commands",
-        "inputs": [
-          "{projectRoot}/**/*",
-          "{workspaceRoot}/features/**/*",
-          "{workspaceRoot}/package.json",
-          "{workspaceRoot}/nx.json"
-        ],
-        "options": {
-          "cwd": "fastapi-clean-example",
-          "command": "PYTHONPATH=src:.. uv run behave --stage http --dry-run ../features"
-        }
-      },
-      "test-uat": {
-        "metadata": {
-          "description": "执行后端 HTTP UAT，固定通过 behave --stage http 运行，且默认不负责启动后端服务。"
-        },
-        "executor": "nx:run-commands",
-        "inputs": [
-          "{projectRoot}/**/*",
-          "{workspaceRoot}/features/**/*",
-          "{workspaceRoot}/package.json",
-          "{workspaceRoot}/nx.json"
-        ],
-        "options": {
-          "commands": [
-            "mkdir -p ../dist/test-results/app-api/uat",
-            "PYTHONPATH=src:.. uv run behave --stage http --junit --junit-directory ../dist/test-results/app-api/uat ../features"
-          ],
-          "cwd": "fastapi-clean-example",
-          "parallel": false
-        }
-      },
     "format": {
       "metadata": {
         "description": "运行后端代码格式化。"
