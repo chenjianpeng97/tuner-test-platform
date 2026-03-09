@@ -59,6 +59,11 @@
 
 原因：该规则和用户要求完全一致，同时能把“领域核心行为”和“围绕主功能延伸的子模块行为”分离。这样后续即便扩展出 `user_password`、`user_profile`、`auth_session` 等子功能，也不会挤进同一个超大 feature 文件。
 
+补充约束：
+
+- 允许主功能仅存在 `features/<主功能>.feature`，暂时没有任何子功能目录。
+- 一旦存在 `features/<主功能>/` 子功能目录，则必须存在对应的 `features/<主功能>.feature` 主功能文件。
+
 备选方案：
 
 - 按 HTTP 控制器文件名拆 feature。放弃，因为控制器粒度更偏技术实现，不利于 UI 复用与业务对话。
@@ -156,7 +161,7 @@
 ## Risks / Trade-offs
 
 - [Risk] 使用真实数据库和真实 HTTP 进程会让 BDD 比单元测试更慢。 → Mitigation：将 BDD 保持在验收层，不替代单元测试；通过共享基础数据、减少重复启动和分层 target 降低开销。
-- [Risk] `features/` 与 `db/` 两套目录如果缺乏映射规则，后续容易各自演化。 → Mitigation：在校验脚本中显式检查主功能目录和数据目录是否成对存在。
+- [Risk] `features/` 与 `db/` 两套目录如果缺乏映射规则，后续容易各自演化。 → Mitigation：在校验脚本中显式检查每个子功能目录都能回溯到同名主功能 feature，且主功能具备对应数据目录。
 - [Risk] Alice、Bob 等可读名称在场景增加后可能不够表达复杂上下文。 → Mitigation：允许在同一命名体系中扩展为 `Alice Admin`、`Bob Inactive` 这类语义化身份，但仍避免随机命名。
 - [Risk] Behave stage 目录命名如果实现时理解偏差，可能造成步骤未加载。 → Mitigation：严格遵循 `features/http_environment.py` 与 `features/http_steps/` 的 stage 前缀约定，并在 `app-api:test-uat` 中加入 dry-run 校验步骤。
 - [Risk] BDD 与未来 UI 场景共享数据后，会提高数据基线变更成本。 → Mitigation：区分共享基础数据与场景增量数据，避免所有场景都绑定在一份大而脆弱的数据快照上。

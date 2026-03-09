@@ -34,7 +34,7 @@
 
 ## 6. Nx 约束与校验脚本
 
-- [x] 6.1 在仓库内新增 Python 校验脚本，检查主功能 feature 与同名目录是否成对存在
+- [x] 6.1 在仓库内新增 Python 校验脚本，检查每个子功能目录都存在对应的同名主功能 feature 文件
 - [x] 6.2 在仓库内新增 Python 校验脚本，检查子功能 feature 是否满足 `主功能_子功能.feature` 命名
 - [x] 6.3 在仓库内新增 Python 校验脚本，检查 `features/db/` 与主功能目录的数据映射是否存在
 - [x] 6.4 新增独立的 UAT/BDD Nx 工程（例如 `ux-uat`）并赋予 `scope:ux` 范围，用于承载跨端 feature 工程约束

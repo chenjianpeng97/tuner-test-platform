@@ -9,11 +9,15 @@ def main() -> int:
     features_root = workspace_root / "features"
 
     errors: list[str] = []
-    for feature_file in sorted(features_root.glob("*.feature")):
-        sibling_dir = features_root / feature_file.stem
-        if not sibling_dir.is_dir():
+    for child_dir in sorted(path for path in features_root.iterdir() if path.is_dir()):
+        if not any(child_dir.rglob("*.feature")):
+            continue
+
+        main_feature = features_root / f"{child_dir.name}.feature"
+        if not main_feature.is_file():
             errors.append(
-                f"Missing paired directory for main feature: {feature_file.relative_to(workspace_root)}"
+                "Missing main feature for subfeature directory: "
+                f"{child_dir.relative_to(workspace_root)}"
             )
 
     if errors:
