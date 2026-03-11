@@ -9,6 +9,9 @@ from app.presentation.http.controllers.users.create_user import (
 from app.presentation.http.controllers.users.deactivate_user import (
     create_deactivate_user_router,
 )
+from app.presentation.http.controllers.users.get_current_user import (
+    create_get_current_user_router,
+)
 from app.presentation.http.controllers.users.grant_admin import (
     create_grant_admin_router,
 )
@@ -26,6 +29,7 @@ def create_users_router() -> APIRouter:
         prefix="/users",
         tags=["Users"],
     )
+    router.include_router(create_get_current_user_router())
     router.include_router(create_create_user_router())
     router.include_router(create_list_users_router())
     router.include_router(create_set_user_password_router())

@@ -58,9 +58,10 @@ export function DataTableBulkActions<TData>({
               variant='outline'
               size='icon'
               onClick={handleBulkInvite}
+              disabled
+              title='功能开发中'
               className='size-8'
               aria-label='Invite selected users'
-              title='Invite selected users'
             >
               <Mail />
               <span className='sr-only'>Invite selected users</span>

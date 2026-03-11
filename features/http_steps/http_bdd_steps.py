@@ -6,8 +6,8 @@ from http import HTTPStatus
 from behave import given, then, when
 
 from app.domain.enums.user_role import UserRole
-from features.http_steps.factories.identity_registry import get_identity
-from features.http_steps.factories.seeding import (
+from features.factories.identity_registry import get_identity
+from features.factories.seeding import (
     delete_identity,
     ensure_identity,
     get_user,
@@ -142,12 +142,12 @@ def step_login_with_password(context, name: str, password: str) -> None:
     )
 
 
-@when('I log out')
+@when("I log out")
 def step_logout(context) -> None:
     _request(context, "DELETE", "/account/logout")
 
 
-@then('the response status should be {status_code:d}')
+@then("the response status should be {status_code:d}")
 def step_assert_status(context, status_code: int) -> None:
     actual = context.last_response.status_code
     if actual != status_code:
@@ -156,7 +156,7 @@ def step_assert_status(context, status_code: int) -> None:
         )
 
 
-@then('the created user id should be returned')
+@then("the created user id should be returned")
 def step_assert_created_user_id(context) -> None:
     payload = context.last_json
     if not isinstance(payload, dict) or "id" not in payload:
@@ -176,31 +176,35 @@ def step_assert_user_state(context, name: str, role: str, active: str) -> None:
         )
 
 
-@then('the auth cookie should be issued')
+@then("the auth cookie should be issued")
 def step_assert_auth_cookie_issued(context) -> None:
     access_token = context.http.cookies.get("access_token")
     if not access_token:
         raise AssertionError("Expected access_token cookie to be set.")
 
 
-@then('the auth cookie should not be issued')
+@then("the auth cookie should not be issued")
 def step_assert_auth_cookie_missing(context) -> None:
     access_token = context.http.cookies.get("access_token")
     if access_token:
         raise AssertionError("Did not expect access_token cookie to be set.")
 
 
-@then('the auth cookie should be cleared')
+@then("the auth cookie should be cleared")
 def step_assert_auth_cookie_cleared(context) -> None:
     access_token = context.http.cookies.get("access_token")
     if access_token:
         raise AssertionError("Expected access_token cookie to be cleared.")
     set_cookie = context.last_response.headers.get("set-cookie", "")
     if "max-age=0" not in set_cookie.lower():
-        raise AssertionError(f"Expected a removal Set-Cookie header, got {set_cookie!r}.")
+        raise AssertionError(
+            f"Expected a removal Set-Cookie header, got {set_cookie!r}."
+        )
 
 
-@then('the current session should be allowed to access the protected user list endpoint')
+@then(
+    "the current session should be allowed to access the protected user list endpoint"
+)
 def step_assert_session_allowed(context) -> None:
     response = _request(context, "GET", "/users/")
     if response.status_code != HTTPStatus.OK:
@@ -209,7 +213,9 @@ def step_assert_session_allowed(context) -> None:
         )
 
 
-@then('the current session should be unauthorized to access the protected user list endpoint')
+@then(
+    "the current session should be unauthorized to access the protected user list endpoint"
+)
 def step_assert_session_unauthorized(context) -> None:
     response = _request(context, "GET", "/users/")
     if response.status_code not in (HTTPStatus.UNAUTHORIZED, HTTPStatus.FORBIDDEN):

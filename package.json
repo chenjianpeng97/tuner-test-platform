@@ -9,6 +9,7 @@
         "init": "pnpm install && nx run-many --target=init --all"
     },
     "devDependencies": {
+        "@playwright/test": "^1.58.2",
         "nx": "^21.0.0"
     }
 }

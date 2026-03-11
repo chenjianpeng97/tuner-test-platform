@@ -95,6 +95,16 @@
         "cwd": "shadcn-admin",
         "command": "pnpm knip"
       }
+    },
+    "generate-api": {
+      "metadata": {
+        "description": "根据 openspec/contracts/app-api.openapi.json 生成前端 API client（react-query + axios）及 MSW handler。"
+      },
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "shadcn-admin",
+        "command": "pnpm exec orval --config orval.config.ts"
+      }
     }
   }
 }

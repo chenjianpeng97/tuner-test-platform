@@ -24,3 +24,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Orval-generated code (rebuild with: pnpm exec nx run app-web:generate-api)
+src/api/generated/

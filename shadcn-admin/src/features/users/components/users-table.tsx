@@ -29,11 +29,12 @@ import { usersColumns as columns } from './users-columns'
 
 type DataTableProps = {
   data: User[]
+  rowCount?: number
   search: Record<string, unknown>
   navigate: NavigateFn
 }
 
-export function UsersTable({ data, search, navigate }: DataTableProps) {
+export function UsersTable({ data, rowCount, search, navigate }: DataTableProps) {
   // Local UI-only states
   const [rowSelection, setRowSelection] = useState({})
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
@@ -67,6 +68,9 @@ export function UsersTable({ data, search, navigate }: DataTableProps) {
   const table = useReactTable({
     data,
     columns,
+    // Server-side pagination: the API returns only the current page
+    manualPagination: true,
+    rowCount,
     state: {
       sorting,
       pagination,
@@ -107,6 +111,7 @@ export function UsersTable({ data, search, navigate }: DataTableProps) {
           {
             columnId: 'status',
             title: 'Status',
+            testId: 'users-status-filter',
             options: [
               { label: 'Active', value: 'active' },
               { label: 'Inactive', value: 'inactive' },
@@ -117,11 +122,12 @@ export function UsersTable({ data, search, navigate }: DataTableProps) {
           {
             columnId: 'role',
             title: 'Role',
+            testId: 'users-role-filter',
             options: roles.map((role) => ({ ...role })),
           },
         ]}
       />
-      <div className='overflow-hidden rounded-md border'>
+      <div className='overflow-hidden rounded-md border' data-testid='users-table'>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -140,9 +146,9 @@ export function UsersTable({ data, search, navigate }: DataTableProps) {
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
                     </TableHead>
                   )
                 })}
@@ -155,6 +161,7 @@ export function UsersTable({ data, search, navigate }: DataTableProps) {
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() && 'selected'}
+                  data-testid='users-table-row'
                   className='group/row'
                 >
                   {row.getVisibleCells().map((cell) => (

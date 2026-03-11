@@ -13,6 +13,12 @@ def main() -> int:
         if not any(child_dir.rglob("*.feature")):
             continue
 
+        # Skip subdirectories that are standalone Behave suites (have their own
+        # environment.py); these are independent runners, not sub-suites of the
+        # main features/*.feature hierarchy.
+        if (child_dir / "environment.py").is_file():
+            continue
+
         main_feature = features_root / f"{child_dir.name}.feature"
         if not main_feature.is_file():
             errors.append(

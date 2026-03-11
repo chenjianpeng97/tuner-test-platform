@@ -13,6 +13,20 @@
     "owner": "qa"
   },
   "targets": {
+    "test-ui-uat": {
+      "metadata": {
+        "description": "Run UI end-to-end tests: Python · Playwright · Behave · Page Object Model. E2E_MODE=mock|integration, BASE_URL, HEADLESS, BEHAVE_ARGS env vars are forwarded."
+      },
+      "executor": "nx:run-commands",
+      "inputs": [
+        "{workspaceRoot}/features/ui/**/*",
+        "{workspaceRoot}/scripts/uat/run-ui-behave.sh"
+      ],
+      "options": {
+        "cwd": "{workspaceRoot}",
+        "command": "bash scripts/uat/run-ui-behave.sh"
+      }
+    },
     "check-features": {
       "metadata": {
         "description": "Run repository-level UAT/BDD feature structure checks."
@@ -32,6 +46,80 @@
           "python3 scripts/uat/check_feature_db_mapping.py"
         ],
         "parallel": false
+      }
+    },
+    "gen-fixtures": {
+      "metadata": {
+        "description": "Regenerate shadcn-admin/src/mocks/__fixtures__.generated.ts from features/fixtures/fixtures.toml. Run after editing fixtures.toml."
+      },
+      "executor": "nx:run-commands",
+      "inputs": [
+        "{workspaceRoot}/features/fixtures/fixtures.toml",
+        "{workspaceRoot}/scripts/uat/gen_mock_fixtures.py"
+      ],
+      "outputs": [
+        "{workspaceRoot}/shadcn-admin/src/mocks/__fixtures__.generated.ts"
+      ],
+      "options": {
+        "cwd": "{workspaceRoot}",
+        "command": "uv run --project fastapi-clean-example python scripts/uat/gen_mock_fixtures.py"
+      }
+    },
+    "check-fixtures": {
+      "metadata": {
+        "description": "CI guard: exit 1 if __fixtures__.generated.ts is out of sync with fixtures.toml."
+      },
+      "executor": "nx:run-commands",
+      "inputs": [
+        "{workspaceRoot}/features/fixtures/fixtures.toml",
+        "{workspaceRoot}/scripts/uat/gen_mock_fixtures.py",
+        "{workspaceRoot}/shadcn-admin/src/mocks/__fixtures__.generated.ts"
+      ],
+      "options": {
+        "cwd": "{workspaceRoot}",
+        "command": "uv run --project fastapi-clean-example python scripts/uat/gen_mock_fixtures.py --check"
+      }
+    },
+    "seed-db": {
+      "metadata": {
+        "description": "Upsert all BDD test identities (Alice/Bob/Charlie) into the local DB. Pass NAMES='Alice Charlie' to seed specific ones only."
+      },
+      "executor": "nx:run-commands",
+      "inputs": [
+        "{workspaceRoot}/features/factories/**/*",
+        "{workspaceRoot}/scripts/uat/manage_fixtures.py"
+      ],
+      "options": {
+        "cwd": "{workspaceRoot}",
+        "command": "APP_ENV=local uv run --project fastapi-clean-example python scripts/uat/manage_fixtures.py seed ${NAMES:+--names $NAMES}"
+      }
+    },
+    "clean-db": {
+      "metadata": {
+        "description": "Delete all BDD test identities from the local DB. Pass NAMES='Alice Charlie' to clean specific ones only."
+      },
+      "executor": "nx:run-commands",
+      "inputs": [
+        "{workspaceRoot}/features/factories/**/*",
+        "{workspaceRoot}/scripts/uat/manage_fixtures.py"
+      ],
+      "options": {
+        "cwd": "{workspaceRoot}",
+        "command": "APP_ENV=local uv run --project fastapi-clean-example python scripts/uat/manage_fixtures.py clean ${NAMES:+--names $NAMES}"
+      }
+    },
+    "status-db": {
+      "metadata": {
+        "description": "Show which BDD test identities currently exist in the local DB."
+      },
+      "executor": "nx:run-commands",
+      "inputs": [
+        "{workspaceRoot}/features/factories/**/*",
+        "{workspaceRoot}/scripts/uat/manage_fixtures.py"
+      ],
+      "options": {
+        "cwd": "{workspaceRoot}",
+        "command": "APP_ENV=local uv run --project fastapi-clean-example python scripts/uat/manage_fixtures.py status"
       }
     }
   }

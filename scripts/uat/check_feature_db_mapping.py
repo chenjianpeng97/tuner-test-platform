@@ -13,6 +13,10 @@ def main() -> int:
     if not (db_root / "base").is_dir():
         errors.append("Missing shared base data directory: features/db/base")
 
+    fixtures_toml = features_root / "fixtures" / "fixtures.toml"
+    if not fixtures_toml.is_file():
+        errors.append("Missing canonical fixture file: features/fixtures/fixtures.toml")
+
     for feature_file in sorted(features_root.glob("*.feature")):
         mapped_dir = db_root / feature_file.stem
         if not mapped_dir.is_dir():

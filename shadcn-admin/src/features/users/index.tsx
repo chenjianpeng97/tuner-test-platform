@@ -1,4 +1,5 @@
 import { getRouteApi } from '@tanstack/react-router'
+import { AlertCircle, Loader2 } from 'lucide-react'
 import { ConfigDrawer } from '@/components/config-drawer'
 import { Header } from '@/components/layout/header'
 import { Main } from '@/components/layout/main'
@@ -9,13 +10,18 @@ import { UsersDialogs } from './components/users-dialogs'
 import { UsersPrimaryButtons } from './components/users-primary-buttons'
 import { UsersProvider } from './components/users-provider'
 import { UsersTable } from './components/users-table'
-import { users } from './data/users'
+import { useUserList } from './hooks/use-user-list'
 
 const route = getRouteApi('/_authenticated/users/')
 
 export function Users() {
   const search = route.useSearch()
   const navigate = route.useNavigate()
+
+  const { users, total, isLoading, isError } = useUserList({
+    page: search.page ?? 1,
+    pageSize: search.pageSize ?? 10,
+  })
 
   return (
     <UsersProvider>
@@ -38,7 +44,21 @@ export function Users() {
           </div>
           <UsersPrimaryButtons />
         </div>
-        <UsersTable data={users} search={search} navigate={navigate} />
+
+        {isError && (
+          <div className='flex items-center gap-2 rounded-md border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive'>
+            <AlertCircle size={16} />
+            <span>Failed to load users. Please try again later.</span>
+          </div>
+        )}
+
+        {isLoading ? (
+          <div className='flex flex-1 items-center justify-center py-16'>
+            <Loader2 className='size-8 animate-spin text-muted-foreground' />
+          </div>
+        ) : (
+          <UsersTable data={users} rowCount={total} search={search} navigate={navigate} />
+        )}
       </Main>
 
       <UsersDialogs />

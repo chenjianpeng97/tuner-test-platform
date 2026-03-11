@@ -4,6 +4,14 @@ dist/
 .venv/
 *.log
 
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+
+# E2E test result artefacts (screenshots, traces)
+test-results/
+
 # Local WSL proxy installer and docs (keep out of repo commits)
 scripts/wsl-proxy-setup.sh
 docs/WSL_PROXY.md

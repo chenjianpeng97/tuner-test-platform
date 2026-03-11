@@ -9,6 +9,9 @@ export function UsersPrimaryButtons() {
       <Button
         variant='outline'
         className='space-x-1'
+        disabled
+        title='功能开发中'
+        data-testid='users-invite-btn'
         onClick={() => setOpen('invite')}
       >
         <span>Invite User</span> <MailPlus size={18} />

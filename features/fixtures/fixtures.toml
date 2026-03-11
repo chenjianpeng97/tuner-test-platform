@@ -1,0 +1,57 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# BDD / E2E Fixture Data — Single Source of Truth
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# HOW IT WORKS
+# ────────────
+# Python  : features/factories/identity_registry.py reads this file at runtime.
+#           No code-gen needed for the Python side.
+#
+# TypeScript (MSW) : run  `pnpm exec nx run ux-uat:gen-fixtures`
+#           to regenerate  shadcn-admin/src/mocks/__fixtures__.generated.ts
+#           from this file.  The generated file is committed to the repo.
+#           Re-run the target whenever this file changes.
+#
+# ADDING A NEW IDENTITY
+# ─────────────────────
+# 1. Add a [users.<Name>] section below.
+# 2. Run `pnpm exec nx run ux-uat:gen-fixtures`  (updates the TS file).
+# 3. No other changes needed — Python picks it up automatically.
+#
+# ADDING A NEW ENTITY TYPE (e.g. tasks)
+# ──────────────────────────────────────
+# 1. Add a new top-level table section, e.g. [tasks.<Name>]
+# 2. Extend gen_mock_fixtures.py to emit the corresponding TS block.
+# 3. Extend features/factories/  to expose a typed Python registry.
+#
+# role values must match app.domain.enums.user_role.UserRole (StrEnum):
+#   "super_admin" | "admin" | "user"
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ── Users ─────────────────────────────────────────────────────────────────────
+
+[users.Alice]
+username  = "alice01"
+password  = "Alice Password 123!"
+role      = "super_admin"
+is_active = true
+
+[users.Bob]
+username  = "bobby01"
+password  = "Bob Password 123!"
+role      = "user"
+is_active = true
+
+[users.Charlie]
+username  = "charlie01"
+password  = "Charlie Password 123!"
+role      = "admin"
+is_active = true
+
+# ── Future entity types (uncomment / extend as needed) ────────────────────────
+#
+# [tasks.FixLoginBug]
+# title       = "Fix login bug"
+# assigned_to = "charlie01"   # matches a users.<Name>.username above
+# status      = "open"
+# priority    = "high"

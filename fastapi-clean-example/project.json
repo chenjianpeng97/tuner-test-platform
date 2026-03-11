@@ -242,6 +242,16 @@
         ],
         "parallel": false
       }
+    },
+    "export-schema": {
+      "metadata": {
+        "description": "Export the FastAPI OpenAPI schema to openspec/contracts/app-api.openapi.json."
+      },
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "fastapi-clean-example",
+        "command": "APP_ENV=local uv run python scripts/export_openapi.py"
+      }
     }
   }
 }

@@ -53,6 +53,7 @@ test = [
 ]
 uat = [
     "behave>=1.2.6",
+    "playwright>=1.50.0",
     "requests>=2.32.0",
 ]
 
