@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
-from playwright.sync_api import expect
+from playwright.sync_api import Page, expect
 
 from .base_page import BasePage
+
+_SIDEBAR_SELECTOR = '[data-sidebar="sidebar"]'
 
 
 class SignInPage(BasePage):
@@ -41,6 +43,18 @@ class SignInPage(BasePage):
     def submit(self) -> None:
         self._page.locator(self._SUBMIT_BUTTON).click()
 
+    def login(self, username: str, password: str) -> None:
+        """High-level convenience: navigate → fill → submit → wait for redirect."""
+        self.goto()
+        self.fill_username(username)
+        self.fill_password(password)
+        self.submit()
+        self.wait_for_redirected_away(timeout=10_000)
+        # Wait for the app sidebar to confirm auth store is settled
+        self._page.locator(_SIDEBAR_SELECTOR).first.wait_for(
+            state="visible", timeout=10_000
+        )
+
     # ── Assertion helpers ─────────────────────────────────────────────────────
 
     def is_on_sign_in_page(self) -> bool:
@@ -57,3 +71,18 @@ class SignInPage(BasePage):
     def wait_until_on_sign_in(self, timeout: int = 6_000) -> None:
         """Wait until the URL stabilises *on* the sign-in page."""
         self.wait_for_url_containing(self.PATH, timeout=timeout)
+
+    def has_auth_cookie(self) -> bool:
+        """Return True when a non-empty auth session cookie is present."""
+        cookies = self._page.context.cookies()
+        return any(
+            c.get("name", "") in ("session", "access_token", "auth")
+            and c.get("value", "")
+            for c in cookies
+        )
+
+    def wait_for_sidebar(self, timeout: int = 10_000) -> None:
+        """Wait for the app sidebar — confirms successful login."""
+        self._page.locator(_SIDEBAR_SELECTOR).first.wait_for(
+            state="visible", timeout=timeout
+        )

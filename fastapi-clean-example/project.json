@@ -243,6 +243,39 @@
         "parallel": false
       }
     },
+    "bdd-http": {
+      "metadata": {
+        "description": "Run BDD UAT suite — HTTP stage (behave + httpx, no browser). Feature files: features/auth.feature features/user.feature"
+      },
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": ".",
+        "commands": [
+          "mkdir -p dist/test-results/app-api/bdd-http",
+          "uv run --project fastapi-clean-example behave --stage http --junit --junit-directory dist/test-results/app-api/bdd-http features/auth.feature features/user.feature"
+        ],
+        "parallel": false
+      }
+    },
+    "bdd-ui": {
+      "metadata": {
+        "description": "Run BDD UAT suite — UI stage (behave + Playwright browser). Feature files: features/auth.feature features/user.feature"
+      },
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": ".",
+        "commands": [
+          "mkdir -p dist/test-results/app-api/bdd-ui",
+          "uv run --project fastapi-clean-example behave --stage ui --junit --junit-directory dist/test-results/app-api/bdd-ui features/auth.feature features/user.feature"
+        ],
+        "parallel": false,
+        "env": {
+          "BASE_URL": "http://localhost:5173",
+          "E2E_MODE": "integration",
+          "HEADLESS": "true"
+        }
+      }
+    },
     "export-schema": {
       "metadata": {
         "description": "Export the FastAPI OpenAPI schema to openspec/contracts/app-api.openapi.json."

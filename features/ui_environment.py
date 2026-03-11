@@ -1,5 +1,5 @@
 """
-Behave environment for UI end-to-end tests.
+Behave environment for UI end-to-end tests (stage: ui).
 
 Tech stack: Python · Playwright (sync API) · Behave · Page Object Model
 
@@ -36,7 +36,7 @@ from playwright.sync_api import (
 )
 
 # ── Python path: allow importing from workspace root ──────────────────────────
-_WORKSPACE_ROOT = Path(__file__).resolve().parents[2]
+_WORKSPACE_ROOT = Path(__file__).resolve().parents[1]
 _BACKEND_ROOT = _WORKSPACE_ROOT / "fastapi-clean-example"
 _BACKEND_SRC = _BACKEND_ROOT / "src"
 
@@ -46,7 +46,6 @@ for _p in (_WORKSPACE_ROOT, _BACKEND_ROOT, _BACKEND_SRC):
         sys.path.insert(0, _ps)
 
 # ── BDD identities required by UI tests ───────────────────────────────────────
-# Mirror of features/factories/identity_registry.py  (Charlie = admin)
 _UI_IDENTITIES = ["Charlie"]
 
 
@@ -91,13 +90,12 @@ def before_all(context) -> None:
 
 def before_scenario(context, scenario) -> None:
     """Create a fresh, isolated browser context + page for each scenario."""
+    context.seeded_users = {}
     context._browser_context: BrowserContext = context._browser.new_context(
         base_url=context.base_url,
-        # Ignore HTTPS certificate errors from local dev servers
         ignore_https_errors=True,
     )
     context.page: Page = context._browser_context.new_page()
-    # Attach default timeout to the context
     context._browser_context.set_default_timeout(15_000)
 
 

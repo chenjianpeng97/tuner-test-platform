@@ -50,3 +50,11 @@ class BasePage:
 
     def take_screenshot(self, name: str) -> None:
         self._page.screenshot(path=f"test-results/{name}.png")
+
+    # ── App navigation ────────────────────────────────────────────────────────
+
+    _LOGOUT_TRIGGER = '[data-testid="user-nav-logout"]'
+
+    def click_logout(self) -> None:
+        """Click the logout control in the app navigation bar."""
+        self._page.locator(self._LOGOUT_TRIGGER).click()

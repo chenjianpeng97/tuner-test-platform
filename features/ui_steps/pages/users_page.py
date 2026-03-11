@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from playwright.sync_api import expect
+from playwright.sync_api import Page, expect
 
 from .base_page import BasePage
 
@@ -26,6 +26,13 @@ class UsersPage(BasePage):
     _ROLE_FILTER = "[data-testid='users-role-filter']"
     _STATUS_FILTER = "[data-testid='users-status-filter']"
     _INVITE_BTN = "[data-testid='users-invite-btn']"
+
+    # Row-level action selectors (suffixed with the username)
+    _ROW_ACTIVATE_BTN = "[data-testid='users-row-activate-{username}']"
+    _ROW_DEACTIVATE_BTN = "[data-testid='users-row-deactivate-{username}']"
+    _ROW_FOR_USER = "[data-testid='users-table-row'][data-username='{username}']"
+    _ROW_ROLE_CELL = "[data-testid='users-table-row'][data-username='{username}'] [data-testid='users-row-role']"
+    _ROW_STATUS_CELL = "[data-testid='users-table-row'][data-username='{username}'] [data-testid='users-row-status']"
 
     # ── Navigation ────────────────────────────────────────────────────────────
 
@@ -61,6 +68,11 @@ class UsersPage(BasePage):
     def first_row_is_visible(self) -> bool:
         return self._page.locator(self._TABLE_ROW).first.is_visible()
 
+    def has_user_row(self, username: str) -> bool:
+        """Return True if a row with the given username is visible."""
+        selector = self._ROW_FOR_USER.format(username=username)
+        return self._page.locator(selector).count() > 0
+
     # ── Filter buttons ────────────────────────────────────────────────────────
 
     def is_role_filter_visible(self) -> bool:
@@ -78,3 +90,32 @@ class UsersPage(BasePage):
         """Return True when the Invite button is present but not interactive."""
         btn = self._page.locator(self._INVITE_BTN)
         return btn.is_disabled()
+
+    # Spec-aligned aliases
+    def is_invite_button_visible(self) -> bool:
+        return self.is_invite_btn_visible()
+
+    def is_invite_button_disabled(self) -> bool:
+        return self.is_invite_btn_disabled()
+
+    # ── User row actions ──────────────────────────────────────────────────────
+
+    def activate_user(self, username: str) -> None:
+        """Click the activate action for the given user row."""
+        selector = self._ROW_ACTIVATE_BTN.format(username=username)
+        self._page.locator(selector).click()
+
+    def deactivate_user(self, username: str) -> None:
+        """Click the deactivate action for the given user row."""
+        selector = self._ROW_DEACTIVATE_BTN.format(username=username)
+        self._page.locator(selector).click()
+
+    def get_user_role(self, username: str) -> str:
+        """Return the role cell text for the given user row."""
+        selector = self._ROW_ROLE_CELL.format(username=username)
+        return self._page.locator(selector).inner_text()
+
+    def get_user_status(self, username: str) -> str:
+        """Return the status cell text for the given user row."""
+        selector = self._ROW_STATUS_CELL.format(username=username)
+        return self._page.locator(selector).inner_text()

@@ -105,6 +105,16 @@
         "cwd": "shadcn-admin",
         "command": "pnpm exec orval --config orval.config.ts"
       }
+    },
+    "test-cypress": {
+      "metadata": {
+        "description": "运行 Cypress E2E 渲染断言测试（替代已删除的 BDD UI-only feature 文件）。需要前端开发服务器在 BASE_URL（默认 http://localhost:5173）上运行。"
+      },
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "shadcn-admin",
+        "command": "pnpm exec cypress run --e2e --headless"
+      }
     }
   }
 }
