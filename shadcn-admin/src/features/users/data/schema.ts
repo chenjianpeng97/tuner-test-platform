@@ -21,6 +21,8 @@ export const userSchema = z.object({
   role: userRoleSchema,
   /** Derived from backend is_active; extended by MSW for invited/suspended */
   status: userStatusSchema,
+  email: z.string().optional(),
+  phoneNumber: z.string().optional(),
 })
 export type User = z.infer<typeof userSchema>
 

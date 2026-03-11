@@ -29,13 +29,9 @@ import { type User } from '../data/schema'
 
 const formSchema = z
   .object({
-    firstName: z.string().min(1, 'First Name is required.'),
-    lastName: z.string().min(1, 'Last Name is required.'),
     username: z.string().min(1, 'Username is required.'),
-    phoneNumber: z.string().min(1, 'Phone number is required.'),
-    email: z.email({
-      error: (iss) => (iss.input === '' ? 'Email is required.' : undefined),
-    }),
+    phoneNumber: z.string().optional(),
+    email: z.string().optional(),
     password: z.string().transform((pwd) => pwd.trim()),
     role: z.string().min(1, 'Role is required.'),
     confirmPassword: z.string().transform((pwd) => pwd.trim()),
@@ -109,10 +105,8 @@ export function UsersActionDialog({
     resolver: zodResolver(formSchema),
     defaultValues: isEdit
       ? {
-        firstName: '',
-        lastName: '',
-        email: '',
-        phoneNumber: '',
+        email: currentRow.email ?? '',
+        phoneNumber: currentRow.phoneNumber ?? '',
         username: currentRow.username,
         role: currentRow.role,
         password: '',
@@ -120,8 +114,6 @@ export function UsersActionDialog({
         isEdit,
       }
       : {
-        firstName: '',
-        lastName: '',
         username: '',
         email: '',
         role: '',
@@ -163,46 +155,6 @@ export function UsersActionDialog({
               onSubmit={form.handleSubmit(onSubmit)}
               className='space-y-4 px-0.5'
             >
-              <FormField
-                control={form.control}
-                name='firstName'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
-                      First Name
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='John'
-                        className='col-span-4'
-                        autoComplete='off'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name='lastName'
-                render={({ field }) => (
-                  <FormItem className='grid grid-cols-6 items-center space-y-0 gap-x-4 gap-y-1'>
-                    <FormLabel className='col-span-2 text-end'>
-                      Last Name
-                    </FormLabel>
-                    <FormControl>
-                      <Input
-                        placeholder='Doe'
-                        className='col-span-4'
-                        autoComplete='off'
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage className='col-span-4 col-start-3' />
-                  </FormItem>
-                )}
-              />
               <FormField
                 control={form.control}
                 name='username'

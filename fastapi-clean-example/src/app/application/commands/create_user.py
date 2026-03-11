@@ -19,6 +19,8 @@ from app.application.common.services.current_user import CurrentUserService
 from app.domain.enums.user_role import UserRole
 from app.domain.exceptions.user import UsernameAlreadyExistsError
 from app.domain.services.user import UserService
+from app.domain.value_objects.email import Email
+from app.domain.value_objects.phone_number import PhoneNumber
 from app.domain.value_objects.raw_password import RawPassword
 from app.domain.value_objects.username import Username
 
@@ -30,6 +32,8 @@ class CreateUserRequest:
     username: str
     password: str
     role: UserRole
+    email: str | None = None
+    phone_number: str | None = None
 
 
 class CreateUserResponse(TypedDict):
@@ -81,8 +85,18 @@ class CreateUserInteractor:
 
         username = Username(request_data.username)
         password = RawPassword(request_data.password)
+        email = Email(request_data.email) if request_data.email else None
+        phone_number = (
+            PhoneNumber(request_data.phone_number)
+            if request_data.phone_number
+            else None
+        )
         user = await self._user_service.create_user(
-            username, password, request_data.role
+            username,
+            password,
+            request_data.role,
+            email=email,
+            phone_number=phone_number,
         )
 
         self._user_command_gateway.add(user)

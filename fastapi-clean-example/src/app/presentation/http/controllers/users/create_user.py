@@ -39,6 +39,8 @@ class CreateUserRequestPydantic(BaseModel):
     username: str
     password: str
     role: UserRole = Field(default=UserRole.USER)
+    email: str | None = None
+    phone_number: str | None = None
 
 
 def create_create_user_router() -> APIRouter:
@@ -77,6 +79,8 @@ def create_create_user_router() -> APIRouter:
             username=request_data_pydantic.username,
             password=request_data_pydantic.password,
             role=request_data_pydantic.role,
+            email=request_data_pydantic.email,
+            phone_number=request_data_pydantic.phone_number,
         )
         return await interactor.execute(request_data)
 

@@ -7,6 +7,8 @@ from app.domain.exceptions.user import (
 )
 from app.domain.ports.password_hasher import PasswordHasher
 from app.domain.ports.user_id_generator import UserIdGenerator
+from app.domain.value_objects.email import Email
+from app.domain.value_objects.phone_number import PhoneNumber
 from app.domain.value_objects.raw_password import RawPassword
 from app.domain.value_objects.username import Username
 
@@ -26,6 +28,8 @@ class UserService:
         raw_password: RawPassword,
         role: UserRole = UserRole.USER,
         is_active: bool = True,
+        email: Email | None = None,
+        phone_number: PhoneNumber | None = None,
     ) -> User:
         """
         :raises RoleAssignmentNotPermittedError:
@@ -42,6 +46,8 @@ class UserService:
             password_hash=password_hash,
             role=role,
             is_active=is_active,
+            email=email,
+            phone_number=phone_number,
         )
 
     async def is_password_valid(self, user: User, raw_password: RawPassword) -> bool:

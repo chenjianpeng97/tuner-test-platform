@@ -12,6 +12,8 @@ class UserQueryModel(TypedDict):
     username: str
     role: UserRole
     is_active: bool
+    email: str | None
+    phone_number: str | None
 
 
 class ListUsersQM(TypedDict):

@@ -48,6 +48,8 @@ class SqlaUserReader(UserQueryGateway):
                 users_table.c.username,
                 users_table.c.role,
                 users_table.c.is_active,
+                users_table.c.email,
+                users_table.c.phone_number,
                 func.count().over().label("total"),
             )
             .order_by(order_by)
@@ -70,6 +72,8 @@ class SqlaUserReader(UserQueryGateway):
                 username=row.username,
                 role=row.role,
                 is_active=row.is_active,
+                email=row.email,
+                phone_number=row.phone_number,
             )
             for row in rows
         ]
