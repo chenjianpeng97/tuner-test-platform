@@ -10,6 +10,9 @@ def main() -> int:
 
     errors: list[str] = []
     for subfeature_file in sorted(features_root.glob("*/*.feature")):
+        # Skip standalone Behave suites that manage their own namespace
+        if (subfeature_file.parent / "environment.py").is_file():
+            continue
         parent_name = subfeature_file.parent.name
         expected_prefix = f"{parent_name}_"
         if not subfeature_file.name.startswith(expected_prefix):
