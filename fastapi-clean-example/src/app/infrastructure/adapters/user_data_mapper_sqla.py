@@ -52,3 +52,10 @@ class SqlaUserDataMapper(UserCommandGateway):
             return (await self._session.execute(stmt)).scalar_one_or_none()
         except SQLAlchemyError as err:
             raise DataMapperError(DB_QUERY_FAILED) from err
+
+    async def delete(self, user: User) -> None:
+        """:raises DataMapperError:"""
+        try:
+            await self._session.delete(user)
+        except SQLAlchemyError as err:
+            raise DataMapperError(DB_QUERY_FAILED) from err

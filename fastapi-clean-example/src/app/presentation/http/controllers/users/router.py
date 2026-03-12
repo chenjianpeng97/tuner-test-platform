@@ -9,6 +9,9 @@ from app.presentation.http.controllers.users.create_user import (
 from app.presentation.http.controllers.users.deactivate_user import (
     create_deactivate_user_router,
 )
+from app.presentation.http.controllers.users.delete_user import (
+    create_delete_user_router,
+)
 from app.presentation.http.controllers.users.get_current_user import (
     create_get_current_user_router,
 )
@@ -37,4 +40,5 @@ def create_users_router() -> APIRouter:
     router.include_router(create_revoke_admin_router())
     router.include_router(create_activate_user_router())
     router.include_router(create_deactivate_user_router())
+    router.include_router(create_delete_user_router())
     return router

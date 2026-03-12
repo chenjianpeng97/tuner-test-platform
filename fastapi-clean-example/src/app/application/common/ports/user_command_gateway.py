@@ -26,3 +26,7 @@ class UserCommandGateway(Protocol):
         for_update: bool = False,
     ) -> User | None:
         """:raises DataMapperError:"""
+
+    @abstractmethod
+    async def delete(self, user: User) -> None:
+        """:raises DataMapperError:"""

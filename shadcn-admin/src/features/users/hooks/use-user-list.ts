@@ -40,6 +40,8 @@ export function useUserList({
         role: u.role,
         /** Derive display status from is_active flag */
         status: u.is_active ? 'active' : 'inactive',
+        email: u.email ?? undefined,
+        phoneNumber: u.phone_number ?? undefined,
     }))
 
     return {

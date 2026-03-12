@@ -3,6 +3,7 @@ from dishka import Provider, Scope, provide, provide_all
 from app.application.commands.activate_user import ActivateUserInteractor
 from app.application.commands.create_user import CreateUserInteractor
 from app.application.commands.deactivate_user import DeactivateUserInteractor
+from app.application.commands.delete_user import DeleteUserInteractor
 from app.application.commands.grant_admin import GrantAdminInteractor
 from app.application.commands.revoke_admin import RevokeAdminInteractor
 from app.application.commands.set_user_password import SetUserPasswordInteractor
@@ -57,6 +58,7 @@ class ApplicationProvider(Provider):
         SetUserPasswordInteractor,
         CreateUserInteractor,
         DeactivateUserInteractor,
+        DeleteUserInteractor,
         GrantAdminInteractor,
         RevokeAdminInteractor,
     )

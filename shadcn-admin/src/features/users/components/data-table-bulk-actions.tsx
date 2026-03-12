@@ -2,7 +2,12 @@ import { useState } from 'react'
 import { type Table } from '@tanstack/react-table'
 import { Trash2, UserX, UserCheck, Mail } from 'lucide-react'
 import { toast } from 'sonner'
-import { sleep } from '@/lib/utils'
+import { useQueryClient } from '@tanstack/react-query'
+import {
+  useActivateUserApiV1UsersUserIdActivationPut,
+  useDeactivateUserApiV1UsersUserIdActivationDelete,
+  getListUsersApiV1UsersGetQueryKey,
+} from '@/api/generated/users/users'
 import { Button } from '@/components/ui/button'
 import {
   Tooltip,
@@ -22,31 +27,31 @@ export function DataTableBulkActions<TData>({
 }: DataTableBulkActionsProps<TData>) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const selectedRows = table.getFilteredSelectedRowModel().rows
+  const queryClient = useQueryClient()
+  const activateUser = useActivateUserApiV1UsersUserIdActivationPut()
+  const deactivateUser = useDeactivateUserApiV1UsersUserIdActivationDelete()
 
-  const handleBulkStatusChange = (status: 'active' | 'inactive') => {
+  const handleBulkStatusChange = async (status: 'active' | 'inactive') => {
     const selectedUsers = selectedRows.map((row) => row.original as User)
-    toast.promise(sleep(2000), {
-      loading: `${status === 'active' ? 'Activating' : 'Deactivating'} users...`,
-      success: () => {
-        table.resetRowSelection()
-        return `${status === 'active' ? 'Activated' : 'Deactivated'} ${selectedUsers.length} user${selectedUsers.length > 1 ? 's' : ''}`
-      },
-      error: `Error ${status === 'active' ? 'activating' : 'deactivating'} users`,
-    })
-    table.resetRowSelection()
+    const mutation = status === 'active' ? activateUser : deactivateUser
+    try {
+      await Promise.all(selectedUsers.map((u) => mutation.mutateAsync({ userId: u.id })))
+      await queryClient.invalidateQueries({ queryKey: getListUsersApiV1UsersGetQueryKey() })
+      table.resetRowSelection()
+      toast.success(
+        `${status === 'active' ? 'Activated' : 'Deactivated'} ${selectedUsers.length} user${
+          selectedUsers.length > 1 ? 's' : ''
+        }`
+      )
+    } catch {
+      toast.error(`Error ${status === 'active' ? 'activating' : 'deactivating'} users`)
+    }
   }
 
   const handleBulkInvite = () => {
     const selectedUsers = selectedRows.map((row) => row.original as User)
-    toast.promise(sleep(2000), {
-      loading: 'Inviting users...',
-      success: () => {
-        table.resetRowSelection()
-        return `Invited ${selectedUsers.length} user${selectedUsers.length > 1 ? 's' : ''}`
-      },
-      error: 'Error inviting users',
-    })
-    table.resetRowSelection()
+    void selectedUsers
+    toast.info('Invite feature is not yet available.')
   }
 
   return (

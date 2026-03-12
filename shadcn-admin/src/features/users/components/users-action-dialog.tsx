@@ -3,7 +3,16 @@
 import { z } from 'zod'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { showSubmittedData } from '@/lib/show-submitted-data'
+import { useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
+import {
+  useCreateUserApiV1UsersPost,
+  useSetUserPasswordApiV1UsersUserIdPasswordPut,
+  useGrantAdminApiV1UsersUserIdRolesAdminPut,
+  useRevokeAdminApiV1UsersUserIdRolesAdminDelete,
+  getListUsersApiV1UsersGetQueryKey,
+} from '@/api/generated/users/users'
+import type { UserRole } from '@/api/generated/model'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -101,6 +110,11 @@ export function UsersActionDialog({
   onOpenChange,
 }: UserActionDialogProps) {
   const isEdit = !!currentRow
+  const queryClient = useQueryClient()
+  const createUser = useCreateUserApiV1UsersPost()
+  const setPassword = useSetUserPasswordApiV1UsersUserIdPasswordPut()
+  const grantAdmin = useGrantAdminApiV1UsersUserIdRolesAdminPut()
+  const revokeAdmin = useRevokeAdminApiV1UsersUserIdRolesAdminDelete()
   const form = useForm<UserForm>({
     resolver: zodResolver(formSchema),
     defaultValues: isEdit
@@ -124,10 +138,44 @@ export function UsersActionDialog({
       },
   })
 
-  const onSubmit = (values: UserForm) => {
-    form.reset()
-    showSubmittedData(values)
-    onOpenChange(false)
+  const onSubmit = async (values: UserForm) => {
+    try {
+      if (!isEdit) {
+        await createUser.mutateAsync({
+          data: {
+            username: values.username,
+            password: values.password,
+            role: values.role as UserRole,
+          },
+        })
+        toast.success('User created successfully.')
+      } else {
+        const userId = currentRow!.id
+        const { dirtyFields } = form.formState
+        const ops: Promise<unknown>[] = []
+
+        if (dirtyFields.password && values.password) {
+          ops.push(setPassword.mutateAsync({ userId, data: values.password }))
+        }
+        if (dirtyFields.role && values.role !== currentRow!.role) {
+          if (values.role === 'admin') {
+            ops.push(grantAdmin.mutateAsync({ userId }))
+          } else if (currentRow!.role === 'admin' && values.role === 'user') {
+            ops.push(revokeAdmin.mutateAsync({ userId }))
+          }
+        }
+
+        if (ops.length > 0) {
+          await Promise.all(ops)
+        }
+        toast.success('User updated successfully.')
+      }
+      await queryClient.invalidateQueries({ queryKey: getListUsersApiV1UsersGetQueryKey() })
+      form.reset()
+      onOpenChange(false)
+    } catch {
+      toast.error(isEdit ? 'Failed to update user.' : 'Failed to create user.')
+    }
   }
 
   const isPasswordTouched = !!form.formState.dirtyFields.password

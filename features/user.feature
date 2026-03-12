@@ -24,3 +24,11 @@ Feature: User core HTTP behaviour
     When I deactivate the user "Bob"
     Then the response status should be 204
     And the user "Bob" should appear as role "user" and active "false"
+
+  Scenario: Super admin deletes an existing user
+    Given the shared identity "Alice" exists as role "super_admin" and is active
+    And the shared identity "Bob" exists as role "user" and is active
+    And I am authenticated as "Alice"
+    When I delete the user "Bob"
+    Then the response status should be 204
+    And the user "Bob" should no longer exist

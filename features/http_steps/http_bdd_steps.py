@@ -114,6 +114,12 @@ def step_deactivate_user(context, name: str) -> None:
     _request(context, "DELETE", f"/users/{user.id_}/activation")
 
 
+@when('I delete the user "{name}"')
+def step_delete_user_request(context, name: str) -> None:
+    user = _fetch_user(name)
+    _request(context, "DELETE", f"/users/{user.id_}")
+
+
 @when('I grant admin role to "{name}"')
 def step_grant_admin(context, name: str) -> None:
     user = _fetch_user(name)
@@ -181,6 +187,18 @@ def step_assert_auth_cookie_issued(context) -> None:
     access_token = context.http.cookies.get("access_token")
     if not access_token:
         raise AssertionError("Expected access_token cookie to be set.")
+
+
+@then('the user "{name}" should no longer exist')
+def step_assert_user_deleted(context, name: str) -> None:
+    del context
+    from features.factories.seeding import get_user
+
+    user = get_user(name)
+    if user is not None:
+        raise AssertionError(
+            f"Expected user {name!r} to be deleted, but it still exists."
+        )
 
 
 @then("the auth cookie should not be issued")
