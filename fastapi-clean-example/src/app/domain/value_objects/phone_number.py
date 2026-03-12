@@ -18,10 +18,12 @@ class PhoneNumber(ValueObject):
         r"^\+?[\d\s\-()\[\]]{7,32}$",
     )
 
-    value: str
+    value: str | None
 
     def __post_init__(self) -> None:
         """:raises DomainTypeError:"""
+        if self.value is None:
+            return
         self._validate_length(self.value)
         self._validate_format(self.value)
 
