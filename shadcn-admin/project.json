@@ -33,6 +33,26 @@
         "command": "pnpm dev"
       }
     },
+    "dev:mock": {
+      "metadata": {
+        "description": "启动前端开发服务器，使用 MSW Mock Service Worker 拦截 API 请求（不依赖后端）。"
+      },
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "shadcn-admin",
+        "command": "VITE_MSW_ENABLED=true pnpm dev"
+      }
+    },
+    "dev:integration": {
+      "metadata": {
+        "description": "启动前端开发服务器，关闭 MSW，将 /api/* 代理到本地后端 http://localhost:8000。"
+      },
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "shadcn-admin",
+        "command": "VITE_MSW_ENABLED=false pnpm dev"
+      }
+    },
     "build": {
       "metadata": {
         "description": "构建前端生产产物。"
