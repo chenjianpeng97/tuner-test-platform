@@ -21,6 +21,7 @@ import {
   AudioWaveform,
   Command,
   GalleryVerticalEnd,
+  FolderKanban,
 } from 'lucide-react'
 import { ClerkLogo } from '@/assets/clerk-logo'
 import { type SidebarData } from '../types'
@@ -66,6 +67,11 @@ export const sidebarData: SidebarData = {
           title: 'Apps',
           url: '/apps',
           icon: Package,
+        },
+        {
+          title: 'Projects',
+          url: '/projects',
+          icon: FolderKanban,
         },
         {
           title: 'Chats',

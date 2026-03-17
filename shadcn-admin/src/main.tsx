@@ -97,6 +97,17 @@ async function startApp() {
     await worker.start({
       onUnhandledRequest: 'bypass', // pass through unmatched requests to real server
     })
+  } else if ('serviceWorker' in navigator) {
+    // Ensure previous MSW registrations do not keep intercepting requests.
+    const registrations = await navigator.serviceWorker.getRegistrations()
+    await Promise.all(
+      registrations.map((registration) => {
+        if (registration.active?.scriptURL?.includes('mockServiceWorker.js')) {
+          return registration.unregister()
+        }
+        return Promise.resolve(false)
+      })
+    )
   }
 
   if (!rootElement.innerHTML) {

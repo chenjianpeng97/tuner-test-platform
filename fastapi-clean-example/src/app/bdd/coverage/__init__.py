@@ -1,0 +1,1 @@
+"""BDD coverage domain package."""

@@ -1,0 +1,6 @@
+export { ProjectsPage } from './projects'
+export { ProjectDetailPage } from './project-detail'
+export { FeatureBrowserPage } from './feature-browser'
+export { FeatureEditorPage } from './feature-editor'
+export { TestPlanPage } from './test-plan'
+export { ExecutionPage } from './execution'

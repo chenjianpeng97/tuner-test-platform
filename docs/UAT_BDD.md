@@ -48,3 +48,14 @@ The first CI version should run the same flow in a single serial job.
 - `app-api:test-uat` writes JUnit XML output under `dist/test-results/app-api/uat/`.
 - GitHub Actions should use `APP_ENV=ci`, not the gitignored `local` config.
 - If the backend is exposed at a different host or port, set `BDD_BASE_URL` before running the UAT target.
+## Project Isolation Checks
+
+Verify that all project-scoped endpoints enforce `project_id` filtering:
+
+- `/api/v1/projects/{id}/features` and `/features/{fid}`
+- `/api/v1/projects/{id}/steps/suggest`
+- `/api/v1/projects/{id}/test-plans/*`
+- `/api/v1/projects/{id}/test-runs/*`
+- `/api/v1/projects/{id}/scenario-executions/*`
+
+Expected: cross-project IDs return 404 or empty data, never leak data.

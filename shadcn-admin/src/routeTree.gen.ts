@@ -28,6 +28,7 @@ import { Route as AuthenticatedSettingsRouteRouteImport } from './routes/_authen
 import { Route as AuthenticatedUsersIndexRouteImport } from './routes/_authenticated/users/index'
 import { Route as AuthenticatedTasksIndexRouteImport } from './routes/_authenticated/tasks/index'
 import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
+import { Route as AuthenticatedProjectsIndexRouteImport } from './routes/_authenticated/projects/index'
 import { Route as AuthenticatedHelpCenterIndexRouteImport } from './routes/_authenticated/help-center/index'
 import { Route as AuthenticatedChatsIndexRouteImport } from './routes/_authenticated/chats/index'
 import { Route as AuthenticatedAppsIndexRouteImport } from './routes/_authenticated/apps/index'
@@ -39,6 +40,11 @@ import { Route as AuthenticatedSettingsDisplayRouteImport } from './routes/_auth
 import { Route as AuthenticatedSettingsAppearanceRouteImport } from './routes/_authenticated/settings/appearance'
 import { Route as AuthenticatedSettingsAccountRouteImport } from './routes/_authenticated/settings/account'
 import { Route as AuthenticatedErrorsErrorRouteImport } from './routes/_authenticated/errors/$error'
+import { Route as AuthenticatedProjectsProjectIdIndexRouteImport } from './routes/_authenticated/projects/$projectId/index'
+import { Route as AuthenticatedProjectsProjectIdTestPlanIndexRouteImport } from './routes/_authenticated/projects/$projectId/test-plan/index'
+import { Route as AuthenticatedProjectsProjectIdFeaturesIndexRouteImport } from './routes/_authenticated/projects/$projectId/features/index'
+import { Route as AuthenticatedProjectsProjectIdExecutionIndexRouteImport } from './routes/_authenticated/projects/$projectId/execution/index'
+import { Route as AuthenticatedProjectsProjectIdFeaturesFeatureIdEditRouteImport } from './routes/_authenticated/projects/$projectId/features/$featureId/edit'
 
 const ClerkRouteRoute = ClerkRouteRouteImport.update({
   id: '/clerk',
@@ -134,6 +140,12 @@ const AuthenticatedSettingsIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedSettingsRouteRoute,
   } as any)
+const AuthenticatedProjectsIndexRoute =
+  AuthenticatedProjectsIndexRouteImport.update({
+    id: '/projects/',
+    path: '/projects/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedHelpCenterIndexRoute =
   AuthenticatedHelpCenterIndexRouteImport.update({
     id: '/help-center/',
@@ -196,6 +208,36 @@ const AuthenticatedErrorsErrorRoute =
     path: '/errors/$error',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedProjectsProjectIdIndexRoute =
+  AuthenticatedProjectsProjectIdIndexRouteImport.update({
+    id: '/projects/$projectId/',
+    path: '/projects/$projectId/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedProjectsProjectIdTestPlanIndexRoute =
+  AuthenticatedProjectsProjectIdTestPlanIndexRouteImport.update({
+    id: '/projects/$projectId/test-plan/',
+    path: '/projects/$projectId/test-plan/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedProjectsProjectIdFeaturesIndexRoute =
+  AuthenticatedProjectsProjectIdFeaturesIndexRouteImport.update({
+    id: '/projects/$projectId/features/',
+    path: '/projects/$projectId/features/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedProjectsProjectIdExecutionIndexRoute =
+  AuthenticatedProjectsProjectIdExecutionIndexRouteImport.update({
+    id: '/projects/$projectId/execution/',
+    path: '/projects/$projectId/execution/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedProjectsProjectIdFeaturesFeatureIdEditRoute =
+  AuthenticatedProjectsProjectIdFeaturesFeatureIdEditRouteImport.update({
+    id: '/projects/$projectId/features/$featureId/edit',
+    path: '/projects/$projectId/features/$featureId/edit',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/clerk': typeof ClerkAuthenticatedRouteRouteWithChildren
@@ -222,9 +264,15 @@ export interface FileRoutesByFullPath {
   '/apps': typeof AuthenticatedAppsIndexRoute
   '/chats': typeof AuthenticatedChatsIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
+  '/projects': typeof AuthenticatedProjectsIndexRoute
   '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
+  '/projects/$projectId': typeof AuthenticatedProjectsProjectIdIndexRoute
+  '/projects/$projectId/execution': typeof AuthenticatedProjectsProjectIdExecutionIndexRoute
+  '/projects/$projectId/features': typeof AuthenticatedProjectsProjectIdFeaturesIndexRoute
+  '/projects/$projectId/test-plan': typeof AuthenticatedProjectsProjectIdTestPlanIndexRoute
+  '/projects/$projectId/features/$featureId/edit': typeof AuthenticatedProjectsProjectIdFeaturesFeatureIdEditRoute
 }
 export interface FileRoutesByTo {
   '/clerk': typeof ClerkAuthenticatedRouteRouteWithChildren
@@ -250,9 +298,15 @@ export interface FileRoutesByTo {
   '/apps': typeof AuthenticatedAppsIndexRoute
   '/chats': typeof AuthenticatedChatsIndexRoute
   '/help-center': typeof AuthenticatedHelpCenterIndexRoute
+  '/projects': typeof AuthenticatedProjectsIndexRoute
   '/settings': typeof AuthenticatedSettingsIndexRoute
   '/tasks': typeof AuthenticatedTasksIndexRoute
   '/users': typeof AuthenticatedUsersIndexRoute
+  '/projects/$projectId': typeof AuthenticatedProjectsProjectIdIndexRoute
+  '/projects/$projectId/execution': typeof AuthenticatedProjectsProjectIdExecutionIndexRoute
+  '/projects/$projectId/features': typeof AuthenticatedProjectsProjectIdFeaturesIndexRoute
+  '/projects/$projectId/test-plan': typeof AuthenticatedProjectsProjectIdTestPlanIndexRoute
+  '/projects/$projectId/features/$featureId/edit': typeof AuthenticatedProjectsProjectIdFeaturesFeatureIdEditRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -283,9 +337,15 @@ export interface FileRoutesById {
   '/_authenticated/apps/': typeof AuthenticatedAppsIndexRoute
   '/_authenticated/chats/': typeof AuthenticatedChatsIndexRoute
   '/_authenticated/help-center/': typeof AuthenticatedHelpCenterIndexRoute
+  '/_authenticated/projects/': typeof AuthenticatedProjectsIndexRoute
   '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/tasks/': typeof AuthenticatedTasksIndexRoute
   '/_authenticated/users/': typeof AuthenticatedUsersIndexRoute
+  '/_authenticated/projects/$projectId/': typeof AuthenticatedProjectsProjectIdIndexRoute
+  '/_authenticated/projects/$projectId/execution/': typeof AuthenticatedProjectsProjectIdExecutionIndexRoute
+  '/_authenticated/projects/$projectId/features/': typeof AuthenticatedProjectsProjectIdFeaturesIndexRoute
+  '/_authenticated/projects/$projectId/test-plan/': typeof AuthenticatedProjectsProjectIdTestPlanIndexRoute
+  '/_authenticated/projects/$projectId/features/$featureId/edit': typeof AuthenticatedProjectsProjectIdFeaturesFeatureIdEditRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -314,9 +374,15 @@ export interface FileRouteTypes {
     | '/apps'
     | '/chats'
     | '/help-center'
+    | '/projects'
     | '/settings/'
     | '/tasks'
     | '/users'
+    | '/projects/$projectId'
+    | '/projects/$projectId/execution'
+    | '/projects/$projectId/features'
+    | '/projects/$projectId/test-plan'
+    | '/projects/$projectId/features/$featureId/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/clerk'
@@ -342,9 +408,15 @@ export interface FileRouteTypes {
     | '/apps'
     | '/chats'
     | '/help-center'
+    | '/projects'
     | '/settings'
     | '/tasks'
     | '/users'
+    | '/projects/$projectId'
+    | '/projects/$projectId/execution'
+    | '/projects/$projectId/features'
+    | '/projects/$projectId/test-plan'
+    | '/projects/$projectId/features/$featureId/edit'
   id:
     | '__root__'
     | '/_authenticated'
@@ -374,9 +446,15 @@ export interface FileRouteTypes {
     | '/_authenticated/apps/'
     | '/_authenticated/chats/'
     | '/_authenticated/help-center/'
+    | '/_authenticated/projects/'
     | '/_authenticated/settings/'
     | '/_authenticated/tasks/'
     | '/_authenticated/users/'
+    | '/_authenticated/projects/$projectId/'
+    | '/_authenticated/projects/$projectId/execution/'
+    | '/_authenticated/projects/$projectId/features/'
+    | '/_authenticated/projects/$projectId/test-plan/'
+    | '/_authenticated/projects/$projectId/features/$featureId/edit'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -529,6 +607,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSettingsIndexRouteImport
       parentRoute: typeof AuthenticatedSettingsRouteRoute
     }
+    '/_authenticated/projects/': {
+      id: '/_authenticated/projects/'
+      path: '/projects'
+      fullPath: '/projects'
+      preLoaderRoute: typeof AuthenticatedProjectsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/help-center/': {
       id: '/_authenticated/help-center/'
       path: '/help-center'
@@ -606,6 +691,41 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedErrorsErrorRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/projects/$projectId/': {
+      id: '/_authenticated/projects/$projectId/'
+      path: '/projects/$projectId'
+      fullPath: '/projects/$projectId'
+      preLoaderRoute: typeof AuthenticatedProjectsProjectIdIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/projects/$projectId/test-plan/': {
+      id: '/_authenticated/projects/$projectId/test-plan/'
+      path: '/projects/$projectId/test-plan'
+      fullPath: '/projects/$projectId/test-plan'
+      preLoaderRoute: typeof AuthenticatedProjectsProjectIdTestPlanIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/projects/$projectId/features/': {
+      id: '/_authenticated/projects/$projectId/features/'
+      path: '/projects/$projectId/features'
+      fullPath: '/projects/$projectId/features'
+      preLoaderRoute: typeof AuthenticatedProjectsProjectIdFeaturesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/projects/$projectId/execution/': {
+      id: '/_authenticated/projects/$projectId/execution/'
+      path: '/projects/$projectId/execution'
+      fullPath: '/projects/$projectId/execution'
+      preLoaderRoute: typeof AuthenticatedProjectsProjectIdExecutionIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/projects/$projectId/features/$featureId/edit': {
+      id: '/_authenticated/projects/$projectId/features/$featureId/edit'
+      path: '/projects/$projectId/features/$featureId/edit'
+      fullPath: '/projects/$projectId/features/$featureId/edit'
+      preLoaderRoute: typeof AuthenticatedProjectsProjectIdFeaturesFeatureIdEditRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
@@ -639,8 +759,14 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedAppsIndexRoute: typeof AuthenticatedAppsIndexRoute
   AuthenticatedChatsIndexRoute: typeof AuthenticatedChatsIndexRoute
   AuthenticatedHelpCenterIndexRoute: typeof AuthenticatedHelpCenterIndexRoute
+  AuthenticatedProjectsIndexRoute: typeof AuthenticatedProjectsIndexRoute
   AuthenticatedTasksIndexRoute: typeof AuthenticatedTasksIndexRoute
   AuthenticatedUsersIndexRoute: typeof AuthenticatedUsersIndexRoute
+  AuthenticatedProjectsProjectIdIndexRoute: typeof AuthenticatedProjectsProjectIdIndexRoute
+  AuthenticatedProjectsProjectIdExecutionIndexRoute: typeof AuthenticatedProjectsProjectIdExecutionIndexRoute
+  AuthenticatedProjectsProjectIdFeaturesIndexRoute: typeof AuthenticatedProjectsProjectIdFeaturesIndexRoute
+  AuthenticatedProjectsProjectIdTestPlanIndexRoute: typeof AuthenticatedProjectsProjectIdTestPlanIndexRoute
+  AuthenticatedProjectsProjectIdFeaturesFeatureIdEditRoute: typeof AuthenticatedProjectsProjectIdFeaturesFeatureIdEditRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -650,8 +776,19 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAppsIndexRoute: AuthenticatedAppsIndexRoute,
   AuthenticatedChatsIndexRoute: AuthenticatedChatsIndexRoute,
   AuthenticatedHelpCenterIndexRoute: AuthenticatedHelpCenterIndexRoute,
+  AuthenticatedProjectsIndexRoute: AuthenticatedProjectsIndexRoute,
   AuthenticatedTasksIndexRoute: AuthenticatedTasksIndexRoute,
   AuthenticatedUsersIndexRoute: AuthenticatedUsersIndexRoute,
+  AuthenticatedProjectsProjectIdIndexRoute:
+    AuthenticatedProjectsProjectIdIndexRoute,
+  AuthenticatedProjectsProjectIdExecutionIndexRoute:
+    AuthenticatedProjectsProjectIdExecutionIndexRoute,
+  AuthenticatedProjectsProjectIdFeaturesIndexRoute:
+    AuthenticatedProjectsProjectIdFeaturesIndexRoute,
+  AuthenticatedProjectsProjectIdTestPlanIndexRoute:
+    AuthenticatedProjectsProjectIdTestPlanIndexRoute,
+  AuthenticatedProjectsProjectIdFeaturesFeatureIdEditRoute:
+    AuthenticatedProjectsProjectIdFeaturesFeatureIdEditRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =

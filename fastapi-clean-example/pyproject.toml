@@ -27,11 +27,13 @@ dependencies = [
     "fastapi==0.121.0",
     "orjson==3.11.4",
     "psycopg[binary]==3.2.12",
+    "python-multipart==0.0.9",
     "pyjwt[crypto]==2.10.1",
     "sqlalchemy[mypy]==2.0.44",
     "uvicorn==0.38.0",
     "uvloop==0.22.1",
     "uuid-utils==0.11.1",
+    "gherkin-official==29.0.0",
 ]
 
 [dependency-groups]
@@ -47,9 +49,10 @@ dev = [
 ]
 test = [
     "coverage==7.10.0",
+    "httpx==0.28.1",
     "line-profiler==5.0.0",
     "pytest==8.4.1",
-    "pytest-asyncio==1.1.0"
+    "pytest-asyncio==1.1.0",
 ]
 uat = [
     "behave>=1.2.6",

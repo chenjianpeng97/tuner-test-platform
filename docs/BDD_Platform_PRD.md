@@ -310,3 +310,66 @@ GET    /api/v1/projects/{id}/features/{fid}/coverage    Feature 级别覆盖率
 | Q2  | behave 工作目录是单机固定路径，还是需支持多节点动态配置？              | 第一期单机固定路径   |
 | Q3  | Step 补全是仅前缀匹配还是支持任意子串匹配（类 VSCode 模糊）？          | 前缀匹配，后期可扩展 |
 | Q4  | Feature 文件编码是否仅支持 UTF-8？                                     | 仅 UTF-8             |
+
+---
+
+## 六、工程说明（实现对齐）
+
+### 6.1 模块结构
+
+后端（`fastapi-clean-example/src/app/`）：
+
+- `projects/`：项目基础信息 + Git 配置 + Git 同步
+- `bdd/features/`：Feature 解析、树形查询、Step 补全
+- `bdd/coverage/`：JUnit XML 导入、覆盖率汇总
+- `bdd/test_plans/`：测试计划与计划项管理
+- `bdd/execution/`：TestRun 执行、SSE 日志、混合执行会话
+
+前端（`shadcn-admin/src/`）：
+
+- `features/bdd/`：Projects / Feature Browser / Feature Editor / Test Plan / Execution 页面
+- `routes/_authenticated/projects/`：路由树（`/projects/*`）
+
+### 6.2 数据迁移顺序
+
+迁移顺序建议（与 Alembic 文件一致）：
+
+1. `projects`
+2. `project_git_configs`
+3. `project_behave_configs`
+4. `features`
+5. `scenarios`
+6. `steps`
+7. `behave_stages`
+8. `step_coverages`
+9. `test_plans`
+10. `test_plan_items`
+11. `test_runs`
+12. `test_run_results`
+13. `scenario_executions`
+14. `step_execution_records`
+
+### 6.3 运行说明（开发）
+
+后端：
+
+1. 配置数据库与环境变量（参考现有 `fastapi-clean-example` 运行方式）
+2. 执行 Alembic 迁移
+3. 启动后端服务
+
+前端：
+
+1. 在 `shadcn-admin/` 目录安装依赖
+2. 启动 Vite 开发服务
+
+执行模块额外要求：
+
+- 服务器需安装 `behave`（CLI 可用）
+- `project_behave_configs.behave_work_dir` 必须是服务器本地目录
+- Git 仓库访问目前仅支持 HTTPS + PAT（第一期）
+
+### 6.4 已知限制（Q1–Q3）
+
+- 仅支持 PAT，不支持 SSH Key（Q1）
+- `behave_work_dir` 仅支持本地路径（Q2）
+- Step 匹配仅支持默认 parse matcher（不支持 `use_step_matcher('re')`）（Q3）
